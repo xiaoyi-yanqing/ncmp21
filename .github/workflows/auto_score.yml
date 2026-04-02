@@ -2,7 +2,7 @@ name: Auto Score
 
 on:
   schedule:
-    - cron: '0 18 * * *'  # UTC 17:00 (北京时间1:00)
+    - cron: '0 0 * * *'  # UTC 0:00 (北京时间 8:00) 触发
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    - name: 随机延迟 (Random Delay)
+      run: |
+        # 生成 0 到 18000 秒（5小时）的随机数并休眠
+        # 配合上面的定时，实现北京时间 8:00 到 13:00 之间的随机执行
+        DELAY=$((RANDOM % 18000))
+        echo "休眠 $DELAY 秒..."
+        sleep $DELAY
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
