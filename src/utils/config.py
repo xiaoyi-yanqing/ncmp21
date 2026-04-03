@@ -96,7 +96,20 @@ class Config:
         return self.config_data.get(key, default)
 
     def get_wait_time(self) -> float:
-        """获取随机等待时间"""
+        """获取随机等待时间，加入防风控机制"""
         min_time = float(self.get("wait_time_min", 15))
         max_time = float(self.get("wait_time_max", 20))
+        
+        # 避免用户配置的时间过短，强制注入防检测的最小合理听歌时长
+        # 听一首歌通常至少需要几十秒，所以如果配置的最大时间过小，我们强制扩大时间窗口
+        if max_time < 60:
+            max_time = 60.0
+            
+        if min_time < 25:
+            min_time = 25.0
+            
+        # 偶尔（例如10%的概率）模拟真人听完整首歌甚至去上个厕所的超长等待（60-120秒）
+        if random.random() < 0.10:
+            return random.uniform(60.0, 120.0)
+            
         return random.uniform(min_time, max_time)
