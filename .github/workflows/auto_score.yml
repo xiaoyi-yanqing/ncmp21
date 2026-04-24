@@ -18,7 +18,7 @@ jobs:
         # 配合上面的定时，实现北京时间 8:00 到 13:00 之间的随机执行
         DELAY=$((RANDOM % 18000))
         echo "休眠 $DELAY 秒..."
-        # sleep $DELAY
+        sleep $DELAY
 
     - name: Set up Python
       uses: actions/setup-python@v2
